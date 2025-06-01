@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CL ≈ NSCL</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX CSS + JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js"
+      onload="renderMathInElement(document.body, { delimiters: [ {left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false} ] });"></script>
+
+    <!-- Icons (SVG-based) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+      .fade-in-up {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+      }
+      .fade-in-up.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    </style>
+  </head>
+  <body class="bg-slate-50 text-slate-800">
+    <main class="flex flex-col items-center px-4 py-10 min-h-screen">
+      <!-- Hero Section -->
+      <section id="hero" class="w-full max-w-5xl text-center fade-in-up">
+        <h1 class="mb-4 text-4xl font-extrabold leading-tight md:text-5xl">
+          Self‑Supervised Contrastive Learning <br class="hidden md:block" />
+          is Approximately Supervised Contrastive Learning
+        </h1>
+        <div class="mt-2 space-y-1 text-lg font-medium text-slate-700 md:text-2xl">
+          <p>
+            <a href="https://achleshwar.github.io/" class="hover:underline" target="_blank">Achleshwar Luthra</a>
+            · <a href="https://people.tamu.edu/~tianbao-yang/" class="hover:underline" target="_blank">Tianbao Yang</a>
+            · <a href="https://tomergalanti.github.io/index.html" class="hover:underline" target="_blank">Tomer Galanti</a>
+          </p>
+          <p class="text-slate-500 font-medium">Texas A&amp;M University</p>
+        </div>
+      </section>
+
+      <!-- Links Section -->
+      <section class="mt-10 flex flex-col md:flex-row items-center justify-center gap-8">
+        <a href="https://github.com/yourname/paper-code" class="flex flex-col items-center hover:scale-105 transition-transform" target="_blank">
+          <i class="fab fa-github text-5xl text-slate-800"></i>
+          <span class="mt-2 text-md text-slate-600">Code</span>
+        </a>
+        <a href="https://arxiv.org/abs/2405.xxxxx" class="flex flex-col items-center hover:scale-105 transition-transform" target="_blank">
+          <i class="fas fa-file-pdf text-5xl text-indigo-500"></i>
+          <span class="mt-2 text-md text-slate-600">Paper</span>
+        </a>
+      </section>
+
+      <!-- Overview Section -->
+      <section class="mt-20 w-full max-w-5xl text-left">
+        <h2 class="text-2xl font-bold mb-4">Overview</h2>
+        <p class="text-lg mb-4">
+          Despite its empirical success, the principles that make self‑supervised contrastive learning (CL)
+          work remain poorly understood. Several works have observed that CL-trained models exhibit
+          properties remarkably similar to supervised ones — such as well-formed clusters and
+          transferable features — even though CL lacks any access to labels.
+        </p>
+
+        <!-- Image Grid -->
+        <div class="overflow-x-auto">
+          <!-- Top row: DCL -->
+            <div class="grid grid-cols-6 gap-2 mb-4">
+                <img src="./images/umap/umap_imagenet_dcl_random.png" alt="DCL Random" class="w-full object-contain rounded shadow transition hover:scale-105" />
+                <img src="./images/umap/umap_imagenet_dcl_epoch10.png" alt="DCL Epoch 10" class="w-full object-contain rounded shadow transition hover:scale-105" />
+                <img src="./images/umap/umap_imagenet_dcl_epoch100.png" alt="DCL Epoch 100" class="w-full object-contain rounded shadow transition hover:scale-105" />
+                <img src="./images/umap/umap_imagenet_dcl_epoch500.png" alt="DCL Epoch 500" class="w-full object-contain rounded shadow transition hover:scale-105" />
+                <img src="./images/umap/umap_imagenet_dcl_epoch1000.png" alt="DCL Epoch 1000" class="w-full object-contain rounded shadow transition hover:scale-105" />
+                <img src="./images/umap/umap_imagenet_dcl_epoch1900.png" alt="DCL Epoch 1900" class="w-full object-contain rounded shadow transition hover:scale-105" />
+            </div>
+            
+            <!-- Bottom row: NSCL -->
+            <div class="grid grid-cols-6 gap-2 mb-2">
+                <img src="./images/umap/umap_imagenet_nscl_random.png" alt="NSCL Random" class="w-full object-contain rounded shadow transition hover:scale-105" />
+                <img src="./images/umap/umap_imagenet_nscl_epoch10.png" alt="NSCL Epoch 10" class="w-full object-contain rounded shadow transition hover:scale-105" />
+                <img src="./images/umap/umap_imagenet_nscl_epoch100.png" alt="NSCL Epoch 100" class="w-full object-contain rounded shadow transition hover:scale-105" />
+                <img src="./images/umap/umap_imagenet_nscl_epoch500.png" alt="NSCL Epoch 500" class="w-full object-contain rounded shadow transition hover:scale-105" />
+                <img src="./images/umap/umap_imagenet_nscl_epoch1000.png" alt="NSCL Epoch 1000" class="w-full object-contain rounded shadow transition hover:scale-105" />
+                <img src="./images/umap/umap_imagenet_nscl_epoch1900.png" alt="NSCL Epoch 1900" class="w-full object-contain rounded shadow transition hover:scale-105" />
+            </div>
+  
+
+          <div class="grid grid-cols-6 text-center text-sm text-slate-500 mt-4">
+            <span>Init</span>
+            <span>Epoch 10</span>
+            <span>Epoch 100</span>
+            <span>Epoch 500</span>
+            <span>Epoch 1000</span>
+            <span>Epoch 2000</span>
+          </div>
+
+          <p class="text-sm text-slate-500 text-center max-w-4xl mx-auto italic mt-4">
+            <strong>DCL (top)</strong> forms semantic clusters without label supervision, while <strong>NSCL (bottom)</strong> yields tighter, more separable clusters.
+          </p>
+        </div>
+
+        <p class="mt-6 text-lg">
+          This puzzling behavior has raised a fundamental question:
+        </p>
+
+        <div class="fade-in-up mx-auto my-8 w-full max-w-3xl rounded-md border border-black bg-indigo-50 px-6 py-4 text-center text-lg italic text-slate-800 shadow-sm">
+          <strong>
+            How does self-supervised CL learn representations similar to supervised learning, despite lacking explicit supervision?
+          </strong>
+        </div>
+
+        <p class="text-lg">
+          Our work views self‑supervised contrastive learning (CL) through the lens of its
+          supervised counterpart. We show that the popular <strong>CL objective implicitly optimizes a
+          negatives‑only supervised contrastive loss (NSCL)</strong>. We also derive a
+          new error bound that links the geometric properties of learned representations to downstream few‑shot performance.
+          Extensive experiments confirm the theory and reveal how CL shapes the geometry of learned features.
+        </p>
+      </section>
+    
+      <!-- Key Claims -->
+      <section class="mt-20 w-full max-w-4xl text-left">
+        <h2 class="text-3xl font-bold mb-6 text-center">Key Claims</h2>
+
+        <!-- Claim 1 -->
+        <div class="mb-10 p-6 border rounded-md shadow-sm bg-white fade-in-up">
+            <h3 class="text-xl font-semibold mb-2">1 · CL ≈ NSCL</h3>
+            <p class="mb-4">
+            The InfoNCE-style loss (<span class="text-blue-600 font-medium">Decoupled Contrastive Loss</span>)
+            used in self-supervised learning differs from the
+            <span class="text-red-600 font-medium">Negatives-only Supervised Contrastive Loss</span>
+            by at most O(1/C). In practice, for a large number of semantic classes (C), the two losses are almost indistinguishable.
+            </p>
+
+            <p class="mb-2">$$0 \leq \left| \mathcal{L}^{\text{DCL}} - \mathcal{L}^{\text{NSCL}} \right| \leq \log\left(1 + \frac{e^2 \cdot n_{\max}}{N - n_{\max}}\right)$$</p>
+            <p class="text-sm italic text-right text-slate-500 mb-4">Theorem (1)</p>
+
+            <div class="bg-slate-50 border rounded p-4 text-sm mb-4">
+            $$\small
+            \mathcal{L}^{\mathrm{DCL}}(f) = -\frac{1}{K^2N}\sum^{K}_{l_1,l_2=1}\sum_{i=1}^N
+            \log \left(
+            \frac{\exp(\mathrm{sim}(z^{l_1}_i, z^{l_2}_i))}
+                    {\sum^{K}_{l_3=1}\sum_{j\in [N]\setminus \{i\}} \exp (\mathrm{sim}(z^{l_1}_i, z^{l_3}_j))}
+            \right)$$
+            </div>
+
+            <div class="bg-slate-50 border rounded p-4 text-sm mb-4">
+            $$\small
+            \mathcal{L}^{\mathrm{NSCL}}(f) = -\frac{1}{K^2N}\sum^{K}_{l_1,l_2=1}\sum_{i=1}^N
+            \log \left(
+            \frac{\exp(\mathrm{sim}(z^{l_1}_i, z^{l_2}_i))}
+                    {\sum^{K}_{l_3=1}\sum_{j: y_j \neq y_i} \exp (\mathrm{sim}(z^{l_1}_i, z^{l_3}_j))}
+            \right)$$
+            </div>
+
+            <ul class="list-disc list-inside text-sm text-slate-600 space-y-1">
+            <li><strong>$n_{\max}$</strong>: Max number of samples from any class</li>
+            <li><strong>$N$</strong>: Total number of samples in batch</li>
+            <li><strong>$K$</strong>: Total augmented versions of each sample</li>
+            <li><strong>$z^l_i = f(\alpha_l(x_i))$</strong> where <strong>$x_i$</strong> is an input image</li>
+            </ul>
+        </div>
+
+        <!-- Claim 2 -->
+        <div class="mb-10 p-6 border rounded-md shadow-sm bg-white fade-in-up">
+            <h3 class="text-xl font-semibold mb-2">2 · Recoverability of Labels</h3>
+            <p class="mb-4">
+            A learned representation <strong>$f$</strong> is considered <em>good</em> if it enables strong downstream performance.
+            We formalize this by analyzing the <em>few-shot classification error</em> of a linear probe and NCCC.
+            Our key insight is that this error is governed by two geometric variance terms, with the
+            <strong>directional class-distance-normalized variance (d‑CDNV)</strong> playing the dominant role.
+            </p>
+
+            <p class="mb-2">
+            As the number of labeled samples per class $m$ increases, the influence of the
+            <a href="https://arxiv.org/pdf/2112.15121" target="_blank" class="text-blue-600 underline">standard CDNV</a>
+            diminishes, leaving d‑CDNV as the main driver of performance.
+            </p>
+
+            <p class="text-center font-semibold text-blue-700 mb-4">Low d‑CDNV ⇒ strong transfer from unlabeled to labeled data.</p>
+
+            <div class="mb-4">
+            <p class="text-base mb-2">$$
+                \mathrm{err}^{\mathrm{LP}}_{m,D}(f)
+                \le
+                \mathrm{err}^{\mathrm{NCC}}_{m,D}(f)
+                \le
+                (C'-1)\left[c_1\,\text{Avg}_{i\neq j}[\tilde{V}_f(D_i,D_j)] + \tfrac{c_2}{m}\,\text{Avg}_{i\neq j}[V_{f}(D_i,D_j)] \right]
+            $$</p>
+            <p class="text-sm italic text-right text-slate-500 mb-4">Proposition (1)</p>
+
+            <div class="text-sm text-slate-600 space-y-4">
+            <!-- CDNV -->
+            <div class="bg-slate-50 border rounded p-4 my-4 overflow-x-auto">
+                <div class="flex flex-col md:flex-row items-center justify-start gap-6 w-full">
+                    <p class="font-medium whitespace-nowrap mb-2 md:mb-0">Definition of CDNV:</p>
+                    <p class="whitespace-nowrap">
+                    $$V_f(D_i, D_j) = \frac{\sigma_i^2}{\|\mu_i - \mu_j\|^2}$$
+                    </p>
+                </div>
+            </div>
+
+
+            <!-- Directional CDNV -->
+            <div class="bg-slate-50 border rounded p-4 my-4 overflow-x-auto">
+                <div class="flex flex-col md:flex-row items-center justify-start gap-6 w-full">
+                <p class="font-medium whitespace-nowrap mb-2 md:mb-0">Definition of directional CDNV:</p>
+                <div class="flex flex-col md:flex-row items-center gap-6">
+                    <p class="whitespace-nowrap">
+                    $$\tilde{V}_f(D_i, D_j) = \frac{\sigma_{ij}^2}{\|\mu_i - \mu_j\|^2} ;$$
+                    </p>
+                    <p class="whitespace-nowrap">
+                    $$\sigma_{ij}^{2} = \operatorname{Var}_{x \sim D_i} [ \langle f(x) - \mu_i, u_{ij} \rangle ] ;$$
+                    </p>
+                    <p class="whitespace-nowrap">
+                    $$u_{ij} = \frac{\mu_i - \mu_j}{\|\mu_i - \mu_j\|^2}$$
+                    </p>
+                </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="space-y-1">
+            <p>Other terms:</p>
+            <ul class="list-disc list-inside">
+            <li>$D_i$: Class-conditional distribution for class $i$</li>
+            <li>$c_1$, $c_2$: Constants derived in Appendix C</li>
+            <li>$m$: Number of labeled samples per class (i.e., number of shots)</li>
+            <li>$C'$: Total number of classes</li>
+            </ul>
+        </div>
+        </div>
+        </div>
+        </div>
+
+        <!-- Claim 3 -->
+        <div class="mb-10 p-6 border rounded-md shadow-sm bg-white fade-in-up">
+            <h3 class="text-xl font-semibold mb-2">3 · Collapse + Symmetry in NSCL</h3>
+            <p class="mb-4">
+            <strong>NSCL Minimizers Yield Collapse + Simplex ETF Geometry.</strong>
+            At the global minimum of the NSCL loss, representations exhibit:
+            </p>
+            <ul class="list-disc list-inside text-base text-slate-800 space-y-2 mb-2">
+            <li><strong>(i) Augmentation Collapse:</strong> All augmented views of a sample map to the same point.</li>
+            <li><strong>(ii) Within-Class Collapse:</strong> All samples from the same class share an identical embedding.</li>
+            <li><strong>(iii) Simplex ETF Geometry:</strong> Class means form a symmetric equiangular tight frame in feature space.</li>
+            </ul>
+            <p class="text-sm italic text-right text-slate-500">Theorem (2)</p>
+            <p class="mt-2">
+            Theorem (2) implies that <strong>$\mathcal{L}^{\mathrm{NSCL}}$</strong> yields perfectly clustered representations.
+            </p>
+        </div>
+        </section>
+
+        <!-- Experiments Section -->
+      <section class="mt-20 w-full max-w-5xl text-left">
+        <h2 class="text-2xl font-bold mb-6">Experiments at a Glance</h2>
+        <!-- Experiment Card Placeholder -->
+        <div class="mb-12 space-y-12">
+          <div class="fade-in-up">
+            <h3 class="text-xl font-semibold mb-2">Tracking the losses</h3>
+            <ul class="list-disc list-inside text-slate-700 mb-4">
+              <li>DCL and NSCL losses remain tightly coupled across 2k training epochs on CIFAR-10, CIFAR‑100, and mini‑ImageNet.</li>
+              <li>The empirical gap shrinks as the number of classes grows (noticeable across datasets)</li>
+            </ul>
+            <!-- Placeholder images row -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="bg-gray-200 h-48 rounded"></div>
+              <div class="bg-gray-200 h-48 rounded"></div>
+              <div class="bg-gray-200 h-48 rounded"></div>
+            </div>
+          </div>
+
+          <div class="fade-in-up">
+            <h3 class="text-xl font-semibold mb-2">Few‑shot performance</h3>
+            <ul class="list-disc list-inside text-slate-700 mb-4">
+              <li>For NSCL, 1‑shot linear probing accuracy exceeds 70 % on mini‑ImageNet</li>
+              <li>DCL achieves competitive performance, with 100-shot linear probing accuracy exceeding 70 % on mini‑ImageNet.</li>
+            </ul>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="bg-gray-200 h-48 rounded"></div>
+              <div class="bg-gray-200 h-48 rounded"></div>
+              <div class="bg-gray-200 h-48 rounded"></div>
+            </div>
+          </div>
+
+          <div class="fade-in-up">
+            <h3 class="text-xl font-semibold mb-2">Error bound</h3>
+            <ul class="list-disc list-inside text-slate-700 mb-4">
+              <li>The two-way m-shot NCCC and LP errors are bounded as per Proposition (1)</li>
+              <li>The error bound goes down to 0.25 for CIFAR-10 at a very large m, shown in red</li>
+            </ul>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="bg-gray-200 h-48 rounded"></div>
+              <div class="bg-gray-200 h-48 rounded"></div>
+              <div class="bg-gray-200 h-48 rounded"></div>
+            </div>
+          </div>
+
+          <div class="fade-in-up">
+            <h3 class="text-xl font-semibold mb-2">Geometry of learned representations</h3>
+            <ul class="list-disc list-inside text-slate-700 mb-4">
+              <li>Directional CDNV drops by ~10× during CL training, while standard CDNV decreases only modestly</li>
+              <li>For NSCL, both CDNV and directional CDNV drop significantly</li>
+            </ul>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="bg-gray-200 h-48 rounded"></div>
+              <div class="bg-gray-200 h-48 rounded"></div>
+              <div class="bg-gray-200 h-48 rounded"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Final Remarks Section -->
+      <section class="mt-20 w-full max-w-5xl text-left fade-in-up">
+        <h2 class="text-2xl font-bold mb-4">Final Remarks</h2>
+
+        <p class="text-lg leading-relaxed text-slate-700 mb-6">
+            Our work takes several steps toward a better understanding of self-supervised learning, both theoretically and empirically.
+            We provide a principled explanation for CL’s success in few-shot learning and identify the geometric structure that underlies
+            high-performing representations.
+        </p>
+
+        <p class="mb-4 text-lg font-medium text-slate-800">Interested in the details?</p>
+
+        <div class="flex flex-col md:flex-row gap-4">
+            <a href="https://arxiv.org/abs/2405.xxxxx" target="_blank"
+            class="px-6 py-3 text-white bg-indigo-600 hover:bg-indigo-700 rounded text-center font-medium transition">
+            Read the Paper (PDF)
+            </a>
+            <a href="https://github.com/yourname/paper-code" target="_blank"
+            class="px-6 py-3 border border-indigo-600 text-indigo-600 hover:bg-indigo-50 rounded text-center font-medium transition">
+            🐙 View Code on GitHub
+            </a>
+        </div>
+
+      </section>
+
+    <section id="bibtex" class="mt-24 max-w-5xl w-full fade-in-up">
+        <h2 class="text-2xl font-bold mb-4">BibTeX</h2>
+
+        <div class="relative">
+            <!-- BibTeX block -->
+<pre id="bibtex-entry" class="bg-slate-900 text-green-200 p-4 rounded overflow-x-auto text-sm leading-relaxed font-mono">
+@inproceedings{clnscl2025,
+title  = {Self-Supervised Contrastive Learning is Approximately Supervised Contrastive Learning},
+author = {Luthra, Achleshwar and Yang, Tianbao and Galanti, Tomer},
+year   = {2025},
+url    = {https://arxiv.org/abs/2405.xxxxx}
+}
+</pre>
+
+            <!-- Copy button -->
+            <button onclick="copyBibtex()" class="absolute top-2 right-2 px-2 py-1 text-xs bg-slate-800 text-white border border-slate-700 rounded hover:bg-slate-700 transition">
+            Copy
+            </button>
+        </div>
+    </section>
+
+
+      <!-- Footer -->
+      <footer class="mt-20 border-t pt-6 text-center text-sm text-slate-500">
+        © 2025 Built with 🧠 and ☕. <br />
+        Contact: <a href="mailto:luthra@tamu.edu" class="underline">luthra@tamu.edu</a>
+        &middot; <a href="mailto:galanti@tamu.edu" class="underline">galanti@tamu.edu</a>
+      </footer>
+    </main>
+
+    <!-- Animate on Scroll -->
+    <script>
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+
+      document.querySelectorAll('.fade-in-up').forEach((el) => observer.observe(el));
+
+    function copyBibtex() {
+        const text = document.getElementById("bibtex-entry").innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            // alert("📋 BibTeX copied to clipboard!");
+        });
+        }
+
+    </script>
+  </body>
+</html>
