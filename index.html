@@ -119,18 +119,18 @@
           </strong>
         </div>
 
-        <!-- <p class="text-lg">
+        <p class="text-lg">
           Our work views self‑supervised contrastive learning (CL) through the lens of its
           supervised counterpart. We show that the popular <strong>CL objective implicitly optimizes a
           negatives‑only supervised contrastive loss (NSCL)</strong>. We also derive a
           new error bound that links the geometric properties of learned representations to downstream few‑shot performance.
           Extensive experiments confirm the theory and reveal how CL shapes the geometry of learned features.
-        </p> -->
+        </p>
       </section>
     
       <!-- Key Claims -->
       <section class="mt-20 w-full max-w-5xl text-left">
-        <h2 class="text-2xl font-bold mb-6">Key Contributions</h2>
+        <h2 class="text-2xl font-bold mb-6">Key Observations</h2>
 
         <!-- Claim 1 -->
         <div class="mb-10 p-6 border rounded-md shadow-sm bg-white fade-in-up">
@@ -179,7 +179,7 @@
         </p>
         
         <!-- Image grid -->
-        <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
           <div class="flex flex-col items-center">
             <img src="./images/exp1/cifar10_simclr_losses.png" alt="CIFAR-10" class="w-full object-contain rounded shadow transition hover:scale-105" />
             <span class="mt-2 text-sm text-slate-500">(a) CIFAR10</span>
@@ -201,16 +201,14 @@
           <strong>NSCL minimizers yield collapse + simplex ETF geometry.</strong>
           At the global minimum of the NSCL loss, representations exhibit:
           </p>
-          <ul class="list-disc list-inside text-base text-slate-800 space-y-2 mb-2">
+          <ul class="list-none list-inside text-base text-slate-800 space-y-2 mb-2">
           <li><strong>(i) Augmentation Collapse:</strong> All augmented views of a sample map to the same point.</li>
           <li><strong>(ii) Within-Class Collapse:</strong> All samples from the same class share an identical embedding.</li>
           <li><strong>(iii) Simplex ETF Geometry:</strong> Class means form a symmetric equiangular tight frame in feature space.</li>
           </ul>
           <p class="text-sm italic text-right text-slate-500">Theorem (2)</p>
-          <p class="mt-2">
-          Theorem (2) implies that <strong>$\mathcal{L}^{\mathrm{NSCL}}$</strong> yields perfectly clustered representations.
-          </p>
       </div>
+
       <p class="text-lg mb-4">
         We analyze Thm. (2) by inspecting the geometry of learned representations via two variance terms: 
         <strong>class-distance-normalized variance (CDNV)</strong> and <strong>directional class-distance-normalized variance (d‑CDNV)</strong>.
@@ -219,7 +217,7 @@
       </p>
 
       <!-- Image grid -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
         <div class="flex flex-col items-center">
           <img src="./images/cdnv/cifar10_cdnv.png" alt="CIFAR-10" class="w-full object-contain rounded shadow transition hover:scale-105" />
           <span class="mt-2 text-sm text-slate-500">(a) CIFAR10</span>
@@ -233,49 +231,57 @@
           <span class="mt-2 text-sm text-slate-500">(c) mini-ImageNet</span>
         </div>
       </div>
-
-      </p>  
       
-      <!-- Claim 3 -->
-        <div class="mt-20 mb-10 p-6 border rounded-md shadow-sm bg-white fade-in-up">
-            <h3 class="text-xl font-semibold mb-4">3 · Recoverability of Labels</h3>
-            <p class="mb-4">
-            A learned representation <strong>$f$</strong> is considered <em>good</em> if it enables strong downstream performance.
-            To evaluate the quality of $f$, we report NCCC error and linear probing error on few-shot classification tasks. 
-            </p>
-
-            <ul class="list-disc list-inside mb-4 space-y-1">
-              <li>For NSCL, 1‑shot linear probing accuracy exceeds 70 % on mini‑ImageNet</li>
-              <li>DCL achieves competitive performance, with 100-shot linear probing accuracy exceeding 70 % on mini‑ImageNet.</li>
-          </ul>
-        
-          <!-- Image grid -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="flex flex-col items-center">
-              <img src="./images/exp3/few_shot_error_analysis_cifar10.png" alt="CIFAR-10" class="w-full object-contain rounded shadow transition hover:scale-105" />
-              <span class="mt-2 text-sm text-slate-500">(a) CIFAR10</span>
-            </div>
-            <div class="flex flex-col items-center">
-              <img src="./images/exp3/few_shot_error_analysis_cifar100.png" alt="CIFAR-100" class="w-full object-contain rounded shadow transition hover:scale-105" />
-              <span class="mt-2 text-sm text-slate-500">(b) CIFAR100</span>
-            </div>
-            <div class="flex flex-col items-center">
-              <img src="./images/exp3/few_shot_error_analysis_imagenet.png" alt="mini-ImageNet" class="w-full object-contain rounded shadow transition hover:scale-105" />
-              <span class="mt-2 text-sm text-slate-500">(c) mini-ImageNet</span>
-            </div>
-          </div>
-        </div>
-
       </div>
 
+      <p class="text-lg mb-4 mt-10">
+        A learned representation <strong>$f$</strong> is considered <em>good</em> if it enables strong downstream performance.
+        To evaluate the quality of $f$, we report NCCC error and linear probing error on few-shot classification tasks. 
+        </p>
+
+        <ul class="list-disc list-inside mb-4 space-y-1 text-lg ">
+          <li>For NSCL, 1‑shot linear probing accuracy exceeds 70 % on mini‑ImageNet</li>
+          <li>DCL achieves competitive performance, with 100-shot linear probing accuracy exceeding 70 % on mini‑ImageNet.</li>
+      </ul>
+    
+      <!-- Image grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+        <div class="flex flex-col items-center">
+          <img src="./images/exp3/few_shot_error_analysis_cifar10.png" alt="CIFAR-10" class="w-full object-contain rounded shadow transition hover:scale-105" />
+          <span class="mt-2 text-sm text-slate-500">(a) CIFAR10</span>
+        </div>
+        <div class="flex flex-col items-center">
+          <img src="./images/exp3/few_shot_error_analysis_cifar100.png" alt="CIFAR-100" class="w-full object-contain rounded shadow transition hover:scale-105" />
+          <span class="mt-2 text-sm text-slate-500">(b) CIFAR100</span>
+        </div>
+        <div class="flex flex-col items-center">
+          <img src="./images/exp3/few_shot_error_analysis_imagenet.png" alt="mini-ImageNet" class="w-full object-contain rounded shadow transition hover:scale-105" />
+          <span class="mt-2 text-sm text-slate-500">(c) mini-ImageNet</span>
+        </div>
+      </div>
+
+      <p class="text-lg mb-4 mt-10">
+        Theorem (2) implies that <span class="text-red-600 font-medium">NSCL</span>yields perfectly clustered representations.
+        But expecting perfect clustering in <span class="text-blue-600 font-medium">DCL</span> is unrealistic. This leads us to
+        the following question: <strong>Can we come up with realistic clustering properties for CL that actually explain transferability?</strong>
+        </p>
       <!-- Claim 4 -->
       <div class="mt-20 mb-10 p-6 border rounded-md shadow-sm bg-white fade-in-up">
-          <h3 class="text-xl font-semibold mb-4">4 · Formalizing the error bound</h3>
+          <h3 class="text-xl font-semibold mb-4">3 · Recoverability of Labels in CL</h3>
           <p class="mb-4">
-          We formalize this by analyzing the <em>few-shot classification error</em> of a linear probe and NCCC.
-          Our key insight is that this error is governed by two geometric variance terms, with the
+          Our key insight is that  <em>few-shot classification error</em> is governed by two geometric variance terms, with the
           <strong>directional class-distance-normalized variance (d‑CDNV)</strong> playing the dominant role.
           </p>
+
+          Formally,
+          <p class="text-base mb-2">$$
+            \mathrm{err}^{\mathrm{LP}}_{m,D}(f)
+            \le
+            \mathrm{err}^{\mathrm{NCC}}_{m,D}(f)
+            \le
+            (C'-1)\left[c_1\,\text{Avg}_{i\neq j}[\tilde{V}_f(D_i,D_j)] + \tfrac{c_2}{m}\,\text{Avg}_{i\neq j}[V_{f}(D_i,D_j)] \right]
+        $$</p>
+        <p class="text-sm italic text-right text-slate-500 mb-4">Proposition (1)</p>
 
           <p class="mb-2">
           As the number of labeled samples per class $m$ increases, the influence of the
@@ -286,20 +292,13 @@
           <p class="text-center font-semibold text-blue-700 mb-4">Low d‑CDNV ⇒ strong transfer from unlabeled to labeled data.</p>
 
         <div class="mb-4">
-          <p class="text-base mb-2">$$
-              \mathrm{err}^{\mathrm{LP}}_{m,D}(f)
-              \le
-              \mathrm{err}^{\mathrm{NCC}}_{m,D}(f)
-              \le
-              (C'-1)\left[c_1\,\text{Avg}_{i\neq j}[\tilde{V}_f(D_i,D_j)] + \tfrac{c_2}{m}\,\text{Avg}_{i\neq j}[V_{f}(D_i,D_j)] \right]
-          $$</p>
-          <p class="text-sm italic text-right text-slate-500 mb-4">Proposition (1)</p>
-
+          
+          <p >Definitions of the variance terms used in Proposition (1):</p>
           <div class="text-sm text-slate-600 space-y-4">
             <!-- CDNV -->
             <div class="bg-slate-50 border rounded p-4 my-4 overflow-x-auto">
                 <div class="flex flex-col md:flex-row items-center justify-start gap-6 w-full">
-                    <p class="font-medium whitespace-nowrap mb-2 md:mb-0">Definition of CDNV:</p>
+                    <!-- <p class="font-medium whitespace-nowrap mb-2 md:mb-0">Definition of CDNV:</p> -->
                     <p class="whitespace-nowrap">
                     $$V_f(D_i, D_j) = \frac{\sigma_i^2}{\|\mu_i - \mu_j\|^2}$$
                     </p>
@@ -310,7 +309,7 @@
             <!-- Directional CDNV -->
             <div class="bg-slate-50 border rounded p-4 my-4 overflow-x-auto">
                 <div class="flex flex-col md:flex-row items-center justify-start gap-6 w-full">
-                <p class="font-medium whitespace-nowrap mb-2 md:mb-0">Definition of directional CDNV:</p>
+                <!-- <p class="font-medium whitespace-nowrap mb-2 md:mb-0">Definition of directional CDNV:</p> -->
                 <div class="flex flex-col md:flex-row items-center gap-6">
                     <p class="whitespace-nowrap">
                     $$\tilde{V}_f(D_i, D_j) = \frac{\sigma_{ij}^2}{\|\mu_i - \mu_j\|^2} ;$$
@@ -340,13 +339,13 @@
         </div>
       </div>
 
-      <ul class="list-disc list-inside text-slate-700 mb-6 space-y-1">
-        <li>The two-way m-shot NCCC and LP errors are bounded as per Proposition (1)</li>
-      <li>The error bound goes down to 0.25 for CIFAR-10 at a very large m, shown in red</li>
-    </ul>
+    <p class="text-lg mb-4">
+      We validate Proposition (1) by tracking the few-shot performance of linear probes and NCCC on CIFAR-10, CIFAR-100, and mini‑ImageNet.
+      The error bound goes down to 0.25 for CIFAR-10 at a very large m, shown in red below.
+    </p>
   
     <!-- Image grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
       <div class="flex flex-col items-center">
         <img src="./images/error/error_analysis_cifar10.png" alt="CIFAR-10" class="w-full object-contain rounded shadow transition hover:scale-105" />
         <span class="mt-2 text-sm text-slate-500">(a) CIFAR10</span>
@@ -388,30 +387,30 @@
 
     </section>
         <!-- Experiments Section -->
-      <section class="mt-20 w-full max-w-5xl text-left">
-        <h2 class="text-2xl font-bold mb-6">Experiments at a Glance</h2>
+      <!-- <section class="mt-20 w-full max-w-5xl text-left">
+        <h2 class="text-2xl font-bold mb-6">Experiments at a Glance</h2> -->
         <!-- Experiment Card 1 -->
-        <div class="mt-10 bg-white rounded-xl border border-slate-200 p-6 shadow-md fade-in-up">
+        <!-- <div class="mt-10 bg-white rounded-xl border border-slate-200 p-6 shadow-md fade-in-up">
             <h3 class="text-xl font-semibold mb-4">Tracking the losses</h3>
             <ul class="list-disc list-inside text-slate-700 mb-6 space-y-1">
               <li>DCL and NSCL losses remain tightly coupled across 2k training epochs on CIFAR-10, CIFAR-100, and mini‑ImageNet.</li>
               <li>The empirical gap shrinks as the number of classes grows (noticeable across datasets).</li>
             </ul>
-          </div>
+          </div> -->
 
         <!-- Experiment Card 2 -->
-        <div class="mt-10 bg-white rounded-xl border border-slate-200 p-6 shadow-md fade-in-up">
+        <!-- <div class="mt-10 bg-white rounded-xl border border-slate-200 p-6 shadow-md fade-in-up">
             <h3 class="text-xl font-semibold mb-4">Few-shot performance</h3>
             
-          </div>
+          </div> -->
 
         <!-- Experiment Card 3 -->
-        <div class="mt-10 bg-white rounded-xl border border-slate-200 p-6 shadow-md fade-in-up">
+        <!-- <div class="mt-10 bg-white rounded-xl border border-slate-200 p-6 shadow-md fade-in-up">
             <h3 class="text-xl font-semibold mb-4">Error bound</h3>
           </div>
-        
+         -->
           <!-- Experiment Card 3 -->
-        <div class="mt-10 bg-white rounded-xl border border-slate-200 p-6 shadow-md fade-in-up">
+        <!-- <div class="mt-10 bg-white rounded-xl border border-slate-200 p-6 shadow-md fade-in-up">
             <h3 class="text-xl font-semibold mb-4">Geometry of learned representations</h3>
             <ul class="list-disc list-inside text-slate-700 mb-6 space-y-1">
                 <li>Directional CDNV drops by ~10× during CL training, while standard CDNV decreases only modestly</li>
@@ -420,7 +419,7 @@
           
           </div>
 
-      </section>
+      </section> -->
 
       <!-- Final Remarks Section -->
       <section class="mt-20 w-full max-w-5xl text-left fade-in-up">
