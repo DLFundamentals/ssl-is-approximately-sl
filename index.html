@@ -108,7 +108,7 @@
 
           <p class="text-sm text-slate-500 text-center max-w-4xl mx-auto italic mt-4">
             <strong>Self-supervised CL (top)</strong> forms semantic clusters without label supervision, while 
-            <strong>Supervised CL (bottom)</strong> yields tighter, more separable clusters.
+            <strong>supervised CL (bottom)</strong> yields tighter, more separable clusters.
           </p>
         </div>
 
@@ -140,7 +140,7 @@
             Our first observation suggests that the global <span class="text-blue-700 font-medium">Contrastive Loss</span> (NTXent)
             used in SSL is closely related a supervised loss we refer to as
             <span class="text-red-600 font-medium">Negatives-only Supervised Contrastive Loss (NSCL)</span>
-            by at most O(1/C). In practice, for a large number of semantic classes (C), the two losses are almost indistinguishable.
+            by at most $O(1/C)$. In practice, for a large number of semantic classes ($C$), the two losses are almost indistinguishable.
             </p>
 
             <p class="mb-2">
@@ -269,15 +269,16 @@
       </p>
 
       <p class="text-lg mb-4 mt-10">
+        Our goal is to 
         Before we answer that, we need to understand a variance term that helps us analyze the geometry of learned representations:
         <strong> Class-Distance-Normalized Variance (CDNV)</strong>. For a feature map $f$, and two class-conditional distributions $D_i$ and $D_j$, the CDNV is defined as:
-        $$V_{f}(D_i, D_j) = \frac{\text{Intra-class Variance}}{\text{Inter-class Distance}}$$
+        $$V_{f}(D_i, D_j) = \frac{\text{Intra-class variance}}{\left(\text{Inter-class distance}\right)^2}$$
       </p>
 
       <div class="flex flex-col md:flex-row items-center gap-6 mt-20 items-start">
         <!-- Image column -->
         <div class="md:w-1/2 w-full">
-          <img src="./images/cdnv_viz.png" alt="Descriptive alt" class="w-full rounded shadow" />
+          <img src="./images/cdnv_viz.png" alt="Descriptive alt" class="w-full rounded" />
         </div>
       
         <!-- Text column -->
@@ -288,7 +289,7 @@
             Smaller intra-class variance implies more compact representations of a given class.
           </p>
 
-          <h6 class="text-xl font-semibold mb-2">Inter-class Distance:</h6>
+          <h6 class="text-xl font-semibold mb-2">Inter-class distance:</h6>
           <p class="text-slate-700">
             Inter-class distance measures how far apart the class-centers are in the embedding space.
           </p>
@@ -313,7 +314,7 @@
       <p class="text-base mb-2">$$
         \mathrm{err}_{m,D}(f)
         \lesssim
-        (C'-1)\,\text{Avg}_{i\neq j}[V_{f}(D_i,D_j)] \, (1 + \tfrac{1}{m})
+        \text{Avg}_{i\neq j}[V_{f}(D_i,D_j)] \, (1 + \tfrac{1}{m})
       $$</p>
       
       <p class="text-lg mb-4 mt-10">
@@ -327,7 +328,7 @@
       </p>
 
       <p class="text-lg mb-4 mt-10">
-        <strong>Direction CDNV</strong> refines CDNV by measuring variance only along
+        <strong>Directional CDNV</strong> refines CDNV by measuring variance only along
         the direction between class centers. Instead of using full isotropic distance from 
         a point to its class center, we project each point onto the unit vector connecting 
         class centers. This captures how spread out the points are in the discriminative direction. 
@@ -336,7 +337,7 @@
       <div class="flex flex-col md:flex-row items-center gap-6 mt-20 items-start">
         <!-- Image column -->
         <div class="md:w-1/2 w-full">
-          <img src="./images/directional_cdnv_viz.png" alt="Descriptive alt" class="w-full rounded shadow" />
+          <img src="./images/directional_cdnv_viz.png" alt="Descriptive alt" class="w-full rounded" />
         </div>
       
         <!-- Text column -->
