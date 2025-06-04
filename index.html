@@ -121,8 +121,8 @@
         </div>
 
         <p class="text-lg">
-          Our work compares self‑supervised contrastive learning (CL) and its
-          supervised counterpart. We show that the popular <strong>CL objective implicitly optimizes a
+          In order to address this question, we study the relationship between CL and supervised 
+          contrastive learning (SCL). We show that the popular <strong>CL objective implicitly optimizes a
           supervised contrastive loss (SCL)</strong>. 
         </p>
       </section>
@@ -135,9 +135,9 @@
         <div class="mb-10 p-6 border rounded-md shadow-sm bg-white fade-in-up">
             <h3 class="text-xl font-semibold mb-4">1 · CL ≈ NSCL</h3>
             <p class="mb-4">
-            We observe that the global <span class="text-blue-700 font-medium">Contrastive Loss</span> (NTXent)
-            used in self-supervised learning differs from the
-            <span class="text-red-600 font-medium">Negatives-only Supervised Contrastive Loss</span>
+            Our first observation suggests that the global <span class="text-blue-700 font-medium">Contrastive Loss</span> (NTXent)
+            used in SSL is closely related a supervised loss we refer to as
+            <span class="text-red-600 font-medium">Negatives-only Supervised Contrastive Loss (NSCL)</span>
             by at most O(1/C). In practice, for a large number of semantic classes (C), the two losses are almost indistinguishable.
             </p>
 
@@ -149,7 +149,7 @@
             
             <div class="flex flex-col md:flex-row gap-4 mb-4">
               <!-- DCL Equation -->
-              <div class="bg-slate-50 border rounded p-4 text-sm flex-1">
+              <div class="border-2 border-blue-600 bg-slate-50 rounded p-4 text-sm flex-1 hover:border-blue-300">
                 $$\small
                 \mathcal{L}^{\mathrm{CL}}(f) = -\frac{1}{K^2N}\sum^{K}_{l_1,l_2=1}\sum_{i=1}^N
                 \log \left(
@@ -160,7 +160,7 @@
               </div>
 
               <!-- NSCL Equation -->
-              <div class="bg-slate-50 border rounded p-4 text-sm flex-1">
+              <div class="border-2 border-red-600 bg-slate-50 rounded p-4 text-sm flex-1 hover:border-red-300">
                 $$\small
                 \mathcal{L}^{\mathrm{SCL}}(f) = -\frac{1}{K^2N}\sum^{K}_{l_1,l_2=1}\sum_{i=1}^N
                 \log \left(
@@ -174,38 +174,55 @@
 
             <ul class="list-disc list-inside text-sm text-slate-600 space-y-1">
             <li><strong>$\mathrm{sim(\cdot, \cdot)}$</strong> denotes cosine similarity</li>
-            <li><strong>$N$</strong>: Total number of samples</li>
-            <li><strong>$K$</strong>: Total augmented versions of each sample</li>
-            <li><strong>$z^l_i = f(\alpha_k(x_i))$</strong> where <strong>$x_i$</strong> is an input image
-              and <strong>$\alpha_k$</strong> is the $k^{th}$ augmentation.</li>
+            <li><strong>$N$</strong>: Total number of <strong>training</strong> samples</li>
+            <li><strong>$K$</strong>: Total number of augmented versions of each sample</li>
+            <li><strong>$z^l_i = f(\alpha_k(x_i))$</strong>, where <strong>$x_i$</strong> is an input image
+              and <strong>$\alpha_k$</strong> is its $k^{th}$ augmentation.</li>
             </ul>
         </div>
 
         <p class="text-lg mb-4">
-          We validate Thm. (1) by tracking the losses during training on CIFAR-10, CIFAR-100, and mini‑ImageNet. 
+          To validate Thm. (1), we track the losses during training on CIFAR-100, and mini‑ImageNet for <em>2k</em> epochs. 
           The empirical gap between the two losses shrinks as the number of classes grows and 
-          <span class="text-blue-600 font-medium">CL</span> remains tightly bounded by <span class="text-red-600 font-medium">SCL</span> 
+          <span class="text-blue-600 font-medium">CL</span> remains tightly bounded by <span class="text-red-600 font-medium">NSCL</span> 
           + <span class="text-slate-600 font-medium">$\log\left(1 + \frac{e^2}{C - 1}\right)$.</span>
         </p>
         
         <!-- Image grid -->
-        <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="flex flex-col items-center">
-            <img src="./images/exp1/cifar10_simclr_losses.png" alt="CIFAR-10" class="w-full object-contain rounded shadow transition hover:scale-105" />
-            <span class="mt-2 text-sm text-slate-500">(a) CIFAR10</span>
+            <img src="./images/exp1/cifar100_simclr_losses.png" alt="CIFAR-10" class="w-full object-contain rounded shadow transition hover:scale-105" />
+            <span class="mt-2 text-sm text-slate-500">(a) CIFAR100</span>
           </div>
           <div class="flex flex-col items-center">
-            <img src="./images/exp1/cifar100_simclr_losses.png" alt="CIFAR-100" class="w-full object-contain rounded shadow transition hover:scale-105" />
-            <span class="mt-2 text-sm text-slate-500">(b) CIFAR100</span>
-          </div>
-          <div class="flex flex-col items-center">
-            <img src="./images/exp1/imagenet_simclr_losses.png" alt="mini-ImageNet" class="w-full object-contain rounded shadow transition hover:scale-105" />
-            <span class="mt-2 text-sm text-slate-500">(c) mini-ImageNet</span>
+            <img src="./images/exp1/imagenet_simclr_losses.png" alt="CIFAR-100" class="w-full object-contain rounded shadow transition hover:scale-105" />
+            <span class="mt-2 text-sm text-slate-500">(b) mini-ImageNet</span>
           </div>
         </div>
 
+        <p class="text-lg mb-4 mt-10">
+          In another attempt to verify Thm. (1), we randomly sample $C$ classes from each dataset and train a new
+          SSL model on the subsets corresponding to those classes. We observe that the empirical gap between the two losses exponentially decays
+          as the number of classes increases, and the gap is highly correlated with <span class="text-slate-600 font-medium">$\log\left(1 + \frac{e^2}{C - 1}\right)$.</span>
+        </p>
+
+        <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="flex flex-col items-center">
+            <img src="./images/exp2/th1_exp2_cifar100.png" alt="CIFAR-10" class="w-full object-contain rounded shadow transition hover:scale-105" />
+            <span class="mt-2 text-sm text-slate-500">(a) CIFAR100</span>
+          </div>
+          <div class="flex flex-col items-center">
+            <img src="./images/exp2/th1_exp2_imagenet.png" alt="CIFAR-100" class="w-full object-contain rounded shadow transition hover:scale-105" />
+            <span class="mt-2 text-sm text-slate-500">(b) mini-ImageNet</span>
+          </div>
+        </div>
+
+        <p class="text-lg mb-4 mt-10">
+          Great! We have established that the CL objective is approximately equal to NSCL but ...
+        </p>
+
         <!-- Claim 2 -->
-        <div class="mt-20 mb-10 p-6 border rounded-md shadow-sm bg-white fade-in-up">
+        <div class="mt-10 mb-10 p-6 border rounded-md shadow-sm bg-white fade-in-up">
           <h3 class="text-xl font-semibold mb-2">2 · Why care about NSCL?</h3>
           <p class="mb-4">
           <strong>NSCL minimizers yield collapse + simplex ETF geometry.</strong>
@@ -221,26 +238,23 @@
 
       <p class="text-lg mb-4 mt-10">
         To evaluate the quality of representations learned by $\mathrm{NSCL}$ objective, we report NCCC error
-        and linear probing error on few-shot classification tasks. 
-        </p>
+        and linear probing error on few-shot classification tasks. 1‑shot linear probing accuracy exceeds 70 % on CIFAR-100
+        and mini‑ImageNet, while 1-shot NCCC exceeds90 % on CIFAR10. 
 
-        <ul class="list-disc list-inside mb-4 space-y-1 text-lg ">
-          <li>For NSCL, 1‑shot linear probing accuracy exceeds 70 % on mini‑ImageNet</li>
-          <li>DCL achieves competitive performance, with 100-shot linear probing accuracy exceeding 70 % on mini‑ImageNet.</li>
-      </ul>
+        </p>
     
       <!-- Image grid -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
         <div class="flex flex-col items-center">
-          <img src="./images/exp3/few_shot_error_analysis_cifar10.png" alt="CIFAR-10" class="w-full object-contain rounded shadow transition hover:scale-105" />
+          <img src="./images/exp3_nscl/few_shot_error_analysis_cifar10.png" alt="CIFAR-10" class="w-full object-contain rounded shadow transition hover:scale-105" />
           <span class="mt-2 text-sm text-slate-500">(a) CIFAR10</span>
         </div>
         <div class="flex flex-col items-center">
-          <img src="./images/exp3/few_shot_error_analysis_cifar100.png" alt="CIFAR-100" class="w-full object-contain rounded shadow transition hover:scale-105" />
+          <img src="./images/exp3_nscl/few_shot_error_analysis_cifar100.png" alt="CIFAR-100" class="w-full object-contain rounded shadow transition hover:scale-105" />
           <span class="mt-2 text-sm text-slate-500">(b) CIFAR100</span>
         </div>
         <div class="flex flex-col items-center">
-          <img src="./images/exp3/few_shot_error_analysis_imagenet.png" alt="mini-ImageNet" class="w-full object-contain rounded shadow transition hover:scale-105" />
+          <img src="./images/exp3_nscl/few_shot_error_analysis_imagenet.png" alt="mini-ImageNet" class="w-full object-contain rounded shadow transition hover:scale-105" />
           <span class="mt-2 text-sm text-slate-500">(c) mini-ImageNet</span>
         </div>
       </div>
@@ -248,9 +262,11 @@
       
       <p class="text-lg mb-4 mt-10">
         Theorem (2) implies that <span class="text-red-600 font-medium">NSCL</span> yields perfectly clustered representations.
-        But expecting perfect clustering in <span class="text-blue-600 font-medium">CL</span> is unrealistic. This leads us to
+        But expecting perfect clustering in self-supervised <span class="text-blue-600 font-medium">CL</span> is unrealistic. This leads us to
         the following question: <strong>Can we come up with realistic clustering properties for CL that actually explain transferability?</strong>
-        </p>
+      </p>
+
+
       <!-- Claim 4 -->
       <div class="mt-20 mb-10 p-6 border rounded-md shadow-sm bg-white fade-in-up">
           <h3 class="text-xl font-semibold mb-4">3 · Recoverability of Labels</h3>
