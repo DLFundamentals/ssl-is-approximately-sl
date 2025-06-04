@@ -105,12 +105,13 @@
           </div>
 
           <p class="text-sm text-slate-500 text-center max-w-4xl mx-auto italic mt-4">
-            <strong>DCL (top)</strong> forms semantic clusters without label supervision, while <strong>NSCL (bottom)</strong> yields tighter, more separable clusters.
+            <strong>Self-supervised CL (top)</strong> forms semantic clusters without label supervision, while 
+            <strong>Supervised CL (bottom)</strong> yields tighter, more separable clusters.
           </p>
         </div>
 
         <p class="mt-6 text-lg">
-          This puzzling behavior has raised a fundamental question:
+          This behavior raises the following question:
         </p>
 
         <div class="fade-in-up mx-auto my-8 w-full max-w-3xl rounded-md border border-black bg-indigo-50 px-6 py-4 text-center text-lg italic text-slate-800 shadow-sm">
@@ -120,11 +121,9 @@
         </div>
 
         <p class="text-lg">
-          Our work views self‑supervised contrastive learning (CL) through the lens of its
+          Our work compares self‑supervised contrastive learning (CL) and its
           supervised counterpart. We show that the popular <strong>CL objective implicitly optimizes a
-          negatives‑only supervised contrastive loss (NSCL)</strong>. We also derive a
-          new error bound that links the geometric properties of learned representations to downstream few‑shot performance.
-          Extensive experiments confirm the theory and reveal how CL shapes the geometry of learned features.
+          supervised contrastive loss (SCL)</strong>. 
         </p>
       </section>
     
@@ -136,46 +135,57 @@
         <div class="mb-10 p-6 border rounded-md shadow-sm bg-white fade-in-up">
             <h3 class="text-xl font-semibold mb-4">1 · CL ≈ NSCL</h3>
             <p class="mb-4">
-            We observe that the InfoNCE-style loss (<span class="text-blue-600 font-medium">Decoupled Contrastive Loss</span>)
+            We observe that the global <span class="text-blue-700 font-medium">Contrastive Loss</span> (NTXent)
             used in self-supervised learning differs from the
-            <span class="text-red-600 font-medium">Negatives-only Supervised Contrastive Loss</span>
+            <span class="text-red-600 font-medium">Supervised Contrastive Loss</span>
             by at most O(1/C). In practice, for a large number of semantic classes (C), the two losses are almost indistinguishable.
             </p>
 
-            <p class="mb-2">$$0 \leq \left| \mathcal{L}^{\text{DCL}} - \mathcal{L}^{\text{NSCL}} \right| \leq \log\left(1 + \frac{e^2}{C - 1}\right)$$</p>
+            <p class="mb-2">
+              $$0 \leq \left| \textcolor{blue}{\mathcal{L}^{\text{CL}}} - \textcolor{red}{\mathcal{L}^{\text{NSCL}}} \right| \leq \log\left(1 + \frac{e^2}{C - 1}\right)$$
+            </p>
             <p class="text-sm italic text-right text-slate-500 mb-4">Theorem (1)</p>
             
-            In Thm. (1),
-            <div class="bg-slate-50 border rounded p-4 text-sm mb-4">
-            $$\small
-            \mathcal{L}^{\mathrm{DCL}}(f) = -\frac{1}{K^2N}\sum^{K}_{l_1,l_2=1}\sum_{i=1}^N
-            \log \left(
-            \frac{\exp(\mathrm{sim}(z^{l_1}_i, z^{l_2}_i))}
-                    {\sum^{K}_{l_3=1}\sum_{j\in [N]\setminus \{i\}} \exp (\mathrm{sim}(z^{l_1}_i, z^{l_3}_j))}
-            \right)$$
+            
+            <div class="flex flex-col md:flex-row gap-4 mb-4">
+              <!-- DCL Equation -->
+              <div class="bg-slate-50 border rounded p-4 text-sm flex-1">
+                $$\small
+                \mathcal{L}^{\mathrm{CL}}(f) = -\frac{1}{K^2N}\sum^{K}_{l_1,l_2=1}\sum_{i=1}^N
+                \log \left(
+                \frac{\exp(\mathrm{sim}(z^{l_1}_i, z^{l_2}_i))}{
+                \sum^{K}_{l_3=1} \textcolor{blue}{\sum_{j\in [N]\setminus \{i\}}} \exp (\mathrm{sim}(z^{l_1}_i, z^{l_3}_j)) }
+                \right)
+                $$
+              </div>
+
+              <!-- NSCL Equation -->
+              <div class="bg-slate-50 border rounded p-4 text-sm flex-1">
+                $$\small
+                \mathcal{L}^{\mathrm{SCL}}(f) = -\frac{1}{K^2N}\sum^{K}_{l_1,l_2=1}\sum_{i=1}^N
+                \log \left(
+                \frac{\exp(\mathrm{sim}(z^{l_1}_i, z^{l_2}_i))}{
+                \sum^{K}_{l_3=1} \textcolor{red}{\sum_{j: y_j \neq y_i}} \exp (\mathrm{sim}(z^{l_1}_i, z^{l_3}_j)) }
+                \right)
+                $$
+              </div>
             </div>
 
-            <div class="bg-slate-50 border rounded p-4 text-sm mb-4">
-            $$\small
-            \mathcal{L}^{\mathrm{NSCL}}(f) = -\frac{1}{K^2N}\sum^{K}_{l_1,l_2=1}\sum_{i=1}^N
-            \log \left(
-            \frac{\exp(\mathrm{sim}(z^{l_1}_i, z^{l_2}_i))}
-                    {\sum^{K}_{l_3=1}\sum_{j: y_j \neq y_i} \exp (\mathrm{sim}(z^{l_1}_i, z^{l_3}_j))}
-            \right)$$
-            </div>
 
             <ul class="list-disc list-inside text-sm text-slate-600 space-y-1">
-            <li><strong>$n_{\max}$</strong>: Max number of samples from any class</li>
-            <li><strong>$N$</strong>: Total number of samples in batch</li>
+            <li><strong>$\mathrm{sim(\cdot, \cdot)}$</strong> denotes cosine similarity</li>
+            <li><strong>$N$</strong>: Total number of samples</li>
             <li><strong>$K$</strong>: Total augmented versions of each sample</li>
-            <li><strong>$z^l_i = f(\alpha_l(x_i))$</strong> where <strong>$x_i$</strong> is an input image</li>
+            <li><strong>$z^l_i = f(\alpha_k(x_i))$</strong> where <strong>$x_i$</strong> is an input image
+              and <strong>$\alpha_k$</strong> is the $k^{th}$ augmentation.</li>
             </ul>
         </div>
 
         <p class="text-lg mb-4">
           We validate Thm. (1) by tracking the losses during training on CIFAR-10, CIFAR-100, and mini‑ImageNet. 
-          The empirical gap between the two losses shrinks as the number of classes grows (noticeable across datasets) and 
-          <span class="text-blue-600 font-medium">DCL</span> is tightly bounded by <span class="text-red-600 font-medium">NSCL</span> + <span class="text-slate-600 font-medium">our proposed bound.</span>
+          The empirical gap between the two losses shrinks as the number of classes grows and 
+          <span class="text-blue-600 font-medium">CL</span> remains tightly bounded by <span class="text-red-600 font-medium">SCL</span> 
+          + <span class="text-slate-600 font-medium">$\log\left(1 + \frac{e^2}{C - 1}\right)$.</span>
         </p>
         
         <!-- Image grid -->
