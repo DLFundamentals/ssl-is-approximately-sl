@@ -66,10 +66,12 @@
       <section class="mt-20 w-full max-w-5xl text-left">
         <h2 class="text-2xl font-bold mb-4">Overview</h2>
         <p class="text-lg mb-4">
-          Despite its empirical success, the principles that make self‑supervised contrastive learning (CL)
-          work remain poorly understood. Several works have observed that CL-trained models exhibit
-          properties remarkably similar to supervised ones — such as well-formed clusters and
-          transferable features — even though CL lacks any access to labels.
+          Self-supervised contrastive learning (CL) is everywhere these days. 
+          It’s become a go-to tool for learning useful representations without needing labeled data — and it works remarkably well. 
+          Models trained with CL often show properties that look a lot like those of supervised models: 
+          tight clusters, clean separation between classes, and features that transfer across tasks. But despite 
+          how widely it’s used, we still don’t fully understand why it works so well. After all, 
+          these models are trained without any labels at all.
         </p>
 
         <!-- Image Grid -->
@@ -239,7 +241,7 @@
       <p class="text-lg mb-4 mt-10">
         To evaluate the quality of representations learned by $\mathrm{NSCL}$ objective, we report NCCC error
         and linear probing error on few-shot classification tasks. 1‑shot linear probing accuracy exceeds 70 % on CIFAR-100
-        and mini‑ImageNet, while 1-shot NCCC exceeds90 % on CIFAR10. 
+        and mini‑ImageNet, while 1-shot NCCC exceeds 90 % on CIFAR10. 
 
         </p>
     
@@ -266,6 +268,94 @@
         the following question: <strong>Can we come up with realistic clustering properties for CL that actually explain transferability?</strong>
       </p>
 
+      <p class="text-lg mb-4 mt-10">
+        Before we answer that, we need to understand a variance term that helps us analyze the geometry of learned representations:
+        <strong> Class-Distance-Normalized Variance (CDNV)</strong>. For a feature map $f$, and two class-conditional distributions $D_i$ and $D_j$, the CDNV is defined as:
+        $$V_{f}(D_i, D_j) = \frac{\text{Intra-class Variance}}{\text{Inter-class Distance}}$$
+      </p>
+
+      <div class="flex flex-col md:flex-row items-center gap-6 mt-20 items-start">
+        <!-- Image column -->
+        <div class="md:w-1/2 w-full">
+          <img src="./images/cdnv_viz.png" alt="Descriptive alt" class="w-full rounded shadow" />
+        </div>
+      
+        <!-- Text column -->
+        <div class="md:w-1/2 w-full text-left space-y-4">
+          <h6 class="text-xl font-semibold mb-2">Intra-class variance:</h6>
+          <p class="text-slate-700">
+            Intra-class variance quantifies how tightly the samples are packed around their class-center. 
+            Smaller intra-class variance implies more compact representations of a given class.
+          </p>
+
+          <h6 class="text-xl font-semibold mb-2">Inter-class Distance:</h6>
+          <p class="text-slate-700">
+            Inter-class distance measures how far apart the class-centers are in the embedding space.
+          </p>
+
+          <div class="mt-6 pt-4 border-t border-gray-300">
+            <h6 class="text-xl font-semibold mb-2">What CDNV captures:</h6>
+            <p class="text-slate-700">
+              CDNV balances these two forces—compactness vs. separation—and is minimized when clusters are tight
+              and well-separated.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <p class="text-lg mb-4 mt-10">
+        A low CDNV value is associated with better few-shot generalization and transferability.
+        <a href="https://arxiv.org/pdf/2112.15121" target="_blank" class="text-blue-600 underline">Formally,</a>
+        let $\mathrm{err}_{m,D}(f)$ be the few-shot classification error of a feature map $f$ trained on a data 
+        distribution $D$ with $m$ labeled samples per class. Then, we have the following error bound:
+      </p>
+
+      <p class="text-base mb-2">$$
+        \mathrm{err}_{m,D}(f)
+        \lesssim
+        (C'-1)\,\text{Avg}_{i\neq j}[V_{f}(D_i,D_j)] \, (1 + \tfrac{1}{m})
+      $$</p>
+      
+      <p class="text-lg mb-4 mt-10">
+        This explains the strong few-shot performance of NSCL (shown above) as Thm. (2) implies that
+        NSCL minimizes the CDNV term, which further minimizes
+        the few-shot classification error.
+      </p>
+      
+      <p class="text-lg mb-4 mt-10 font-bold">
+        Why is it not good enough for SSL?
+      </p>
+
+      <p class="text-lg mb-4 mt-10">
+        <strong>Direction CDNV</strong> refines CDNV by measuring variance only along
+        the direction between class centers. Instead of using full isotropic distance from 
+        a point to its class center, we project each point onto the unit vector connecting 
+        class centers. This captures how spread out the points are in the discriminative direction. 
+      </p>
+
+      <div class="flex flex-col md:flex-row items-center gap-6 mt-20 items-start">
+        <!-- Image column -->
+        <div class="md:w-1/2 w-full">
+          <img src="./images/directional_cdnv_viz.png" alt="Descriptive alt" class="w-full rounded shadow" />
+        </div>
+      
+        <!-- Text column -->
+        <div class="md:w-1/2 w-full text-left space-y-4">
+          <h6 class="text-xl font-semibold mb-2">Projected variance:</h6>
+          <p class="text-slate-700">
+            Intra-class variance quantifies how tightly the samples are packed around their class-center. 
+            Smaller intra-class variance implies more compact representations of a given class.
+          </p>
+
+          <div class="mt-6 pt-4 border-t border-gray-300">
+            <h6 class="text-xl font-semibold mb-2">What dir-CDNV captures:</h6>
+            <p class="text-slate-700">
+              CDNV balances these two forces—compactness vs. separation—and is minimized when clusters are tight
+              and well-separated.
+            </p>
+          </div>
+        </div>
+      </div>
 
       <!-- Claim 4 -->
       <div class="mt-20 mb-10 p-6 border rounded-md shadow-sm bg-white fade-in-up">
@@ -285,8 +375,7 @@
 
           <p class="mb-2">
           As the number of labeled samples per class $m$ increases, the influence of the
-          <a href="https://arxiv.org/pdf/2112.15121" target="_blank" class="text-blue-600 underline">standard CDNV</a>
-          diminishes, leaving d‑CDNV as the main driver of performance.
+          standard CDNV diminishes, leaving d‑CDNV as the main driver of performance.
           </p>
 
           <p class="text-center font-semibold text-blue-700 mb-4">Low d‑CDNV ⇒ strong transfer from unlabeled to labeled data.</p>
@@ -294,36 +383,37 @@
         <div class="mb-4">
           
           <p >Definitions of the variance terms used in Proposition (1):</p>
-          <div class="text-sm text-slate-600 space-y-4">
-            <!-- CDNV -->
-            <div class="bg-slate-50 border rounded p-4 my-4 overflow-x-auto">
-                <div class="flex flex-col md:flex-row items-center justify-start gap-6 w-full">
-                    <!-- <p class="font-medium whitespace-nowrap mb-2 md:mb-0">Definition of CDNV:</p> -->
-                    <p class="whitespace-nowrap">
-                    $$V_f(D_i, D_j) = \frac{\sigma_i^2}{\|\mu_i - \mu_j\|^2}$$
-                    </p>
-                </div>
-            </div>
-
-
-            <!-- Directional CDNV -->
-            <div class="bg-slate-50 border rounded p-4 my-4 overflow-x-auto">
-                <div class="flex flex-col md:flex-row items-center justify-start gap-6 w-full">
-                <!-- <p class="font-medium whitespace-nowrap mb-2 md:mb-0">Definition of directional CDNV:</p> -->
-                <div class="flex flex-col md:flex-row items-center gap-6">
-                    <p class="whitespace-nowrap">
-                    $$\tilde{V}_f(D_i, D_j) = \frac{\sigma_{ij}^2}{\|\mu_i - \mu_j\|^2} ;$$
-                    </p>
-                    <p class="whitespace-nowrap">
-                    $$\sigma_{ij}^{2} = \operatorname{Var}_{x \sim D_i} [ \langle f(x) - \mu_i, u_{ij} \rangle ] ;$$
-                    </p>
-                    <p class="whitespace-nowrap">
+          <div class="text-sm text-slate-600">
+            <div class="flex flex-col md:flex-row gap-4">
+              <!-- CDNV -->
+              <div class="bg-slate-50 border rounded p-4 overflow-x-auto flex-1">
+                <p class="whitespace-nowrap">
+                  $$V_f(D_i, D_j) = \frac{\sigma_i^2}{\|\mu_i - \mu_j\|^2}$$
+                </p>
+                <p class="whitespace-nowrap">
+                  $$\sigma_{i}^{2} = \operatorname{Var}_{x \sim D_i} [ f(x) ]$$
+                </p>
+              </div>
+          
+              <!-- Directional CDNV -->
+              <div class="bg-slate-50 border rounded p-4 overflow-x-auto flex-1 space-y-2">
+                <p class="whitespace-nowrap">
+                  $$\tilde{V}_f(D_i, D_j) = \frac{\sigma_{ij}^2}{\|\mu_i - \mu_j\|^2}$$
+                </p>
+                <div class="flex flex-col md:flex-row items-center gap-6 mt-6">
+                  <p class="whitespace-nowrap">
+                    $$\sigma_{ij}^{2} = \operatorname{Var}_{x \sim D_i} [ \langle f(x) - \mu_i, u_{ij} \rangle ]$$
+                  </p>
+                  <p class="whitespace-nowrap">
                     $$u_{ij} = \frac{\mu_i - \mu_j}{\|\mu_i - \mu_j\|^2}$$
-                    </p>
+                  </p>
                 </div>
-                </div>
+                
+              </div>
             </div>
           </div>
+          
+          
 
 
           <div class="space-y-1">
