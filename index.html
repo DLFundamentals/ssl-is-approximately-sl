@@ -107,7 +107,7 @@
           </div>
 
           <p class="text-sm text-slate-500 text-center max-w-4xl mx-auto italic mt-4">
-            <strong>Self-supervised CL (top)</strong> forms semantic clusters without label supervision, while 
+            Figure 1: <strong>Self-supervised CL (top)</strong> forms semantic clusters without label supervision, while 
             <strong>supervised CL (bottom)</strong> yields tighter, more separable clusters.
           </p>
         </div>
@@ -139,8 +139,8 @@
             <p class="mb-4">
             Our first observation suggests that the global <span class="text-blue-700 font-medium">Contrastive Loss</span> (NTXent)
             used in SSL is closely related a supervised loss we refer to as
-            <span class="text-red-600 font-medium">Negatives-only Supervised Contrastive Loss (NSCL)</span>
-            by at most $O(1/C)$. In practice, for a large number of semantic classes ($C$), the two losses are almost indistinguishable.
+            <span class="text-red-600 font-medium">Negatives-only Supervised Contrastive Loss (NSCL)</span>.
+            Specifically, the gap between the two losses is at most $O(1/C)$ as shown below.
             </p>
 
             <p class="mb-2">
@@ -201,6 +201,9 @@
             <span class="mt-2 text-sm text-slate-500">(b) mini-ImageNet</span>
           </div>
         </div>
+        <p class="text-sm text-slate-500 text-center max-w-4xl mx-auto italic mt-4">
+          Figure 2: Validating Thm. (1) as a function of training epochs.
+        </p>
 
         <p class="text-lg mb-4 mt-10">
           In another attempt to verify Thm. (1), we randomly sample $C$ classes from each dataset and train a new
@@ -218,6 +221,9 @@
             <span class="mt-2 text-sm text-slate-500">(b) mini-ImageNet</span>
           </div>
         </div>
+        <p class="text-sm text-slate-500 text-center max-w-4xl mx-auto italic mt-4">
+          Figure 3: Validating Thm. (1) as a function of semantic classes ($C$).
+        </p>
 
         <p class="text-lg mb-4 mt-10">
           Great! We have established that the CL objective is approximately equal to NSCL but ...
@@ -260,21 +266,33 @@
           <span class="mt-2 text-sm text-slate-500">(c) mini-ImageNet</span>
         </div>
       </div>
+      <p class="text-sm text-slate-500 text-center max-w-4xl mx-auto italic mt-4">
+        Figure 4: Downstream performance of a model $f$ trained with NSCL objective on few-shot classification tasks.
+      </p>
       </div>
       
+      <!-- Motivation for CDNV and dir-CDNV -->
       <p class="text-lg mb-4 mt-10">
-        Theorem (2) implies that <span class="text-red-600 font-medium">NSCL</span> yields perfectly clustered representations.
-        But expecting perfect clustering in self-supervised <span class="text-blue-600 font-medium">CL</span> is unrealistic. This leads us to
-        the following question: <strong>Can we come up with realistic clustering properties for CL that actually explain transferability?</strong>
+        NSCL performs well! 
+        <br><br>
+        Theorem 2 implies that <span class="text-red-600 font-medium">NSCL</span> yields perfectly clustered representations, 
+        which in turn allow us to easily infer the labels from the learned model. 
+        However, our goal is to better understand <span class="text-blue-600 font-medium">self-supervised CL</span>, not its supervised counterpart. 
+        This raises the following question: 
+        <div class="fade-in-up mx-auto my-8 w-full max-w-3xl rounded-md border border-black bg-indigo-50 px-6 py-4 text-center text-lg italic text-slate-800 shadow-sm">
+          <strong>
+            Can we identify a weaker form of clustering that is satisfied by CL-trained models and explains their success in downstream classification tasks?
+          </strong>
+        </div>
       </p>
 
       <p class="text-lg mb-4 mt-10">
-        Our goal is to 
-        Before we answer that, we need to understand a variance term that helps us analyze the geometry of learned representations:
-        <strong> Class-Distance-Normalized Variance (CDNV)</strong>. For a feature map $f$, and two class-conditional distributions $D_i$ and $D_j$, the CDNV is defined as:
+        For this purpose, we need to understand a variance term that helps us analyze the geometry of learned representations:
+        <strong> Class-Distance-Normalized Variance (CDNV)</strong>. For a model $f$, and two class-conditional distributions $D_i$ and $D_j$, the CDNV is defined as:
         $$V_{f}(D_i, D_j) = \frac{\text{Intra-class variance}}{\left(\text{Inter-class distance}\right)^2}$$
       </p>
 
+      <!-- CDNV  Visualization -->
       <div class="flex flex-col md:flex-row items-center gap-6 mt-20 items-start">
         <!-- Image column -->
         <div class="md:w-1/2 w-full">
@@ -305,26 +323,40 @@
       </div>
 
       <p class="text-lg mb-4 mt-10">
-        A low CDNV value is associated with better few-shot generalization and transferability.
-        <a href="https://arxiv.org/pdf/2112.15121" target="_blank" class="text-blue-600 underline">Formally,</a>
-        let $\mathrm{err}_{m,D}(f)$ be the few-shot classification error of a feature map $f$ trained on a data 
-        distribution $D$ with $m$ labeled samples per class. Then, we have the following error bound:
+        A low CDNV value is associated with better downstream performance.
+        <a href="https://arxiv.org/pdf/2112.15121" target="_blank" class="text-blue-600 underline">For instance,</a>
+        the few-shot classification error of a model $f$, $\mathrm{err}_{m,D}(f)$, trained on a data 
+        distribution $D$ with $m$ labeled samples per class can be bounded as:
       </p>
 
-      <p class="text-base mb-2">$$
-        \mathrm{err}_{m,D}(f)
-        \lesssim
-        \text{Avg}_{i\neq j}[V_{f}(D_i,D_j)] \, (1 + \tfrac{1}{m})
-      $$</p>
+      <div class="relative mb-4">
+        <p class="text-center">
+          $$
+          \mathrm{err}_{m,D}(f)
+          \lesssim
+          \text{Avg}_{i\neq j}[V_{f}(D_i,D_j)] \, (1 + \tfrac{1}{m})
+          $$
+        </p>
+        <span class="absolute right-0 top-1/2 -translate-y-1/2 text-sm italic text-slate-500">
+          (Eqn. 1)
+        </span>
+      </div>
+      
+      
       
       <p class="text-lg mb-4 mt-10">
-        This explains the strong few-shot performance of NSCL (shown above) as Thm. (2) implies that
+        Eqn. (1) explains the strong few-shot performance of NSCL (shown in Figure 4) as Thm. (2) implies that
         NSCL minimizes the CDNV term, which further minimizes
         the few-shot classification error.
       </p>
       
-      <p class="text-lg mb-4 mt-10 font-bold">
-        Why is it not good enough for SSL?
+      <!-- Introduce directional CDNV -->
+      <p class="text-lg mb-4 mt-10">
+        But wait, 
+        <strong>
+          is CDNV good enough to exlain transferability in SSL?
+        </strong>
+        
       </p>
 
       <p class="text-lg mb-4 mt-10">
@@ -334,6 +366,7 @@
         class centers. This captures how spread out the points are in the discriminative direction. 
       </p>
 
+      <!-- Directional CDNV  Visualization -->
       <div class="flex flex-col md:flex-row items-center gap-6 mt-20 items-start">
         <!-- Image column -->
         <div class="md:w-1/2 w-full">
