@@ -138,7 +138,7 @@
             <h3 class="text-xl font-semibold mb-4">1 · CL ≈ NSCL</h3>
             <p class="mb-4">
             Our first observation suggests that the global <span class="text-blue-700 font-medium">Contrastive Loss</span> (NTXent)
-            used in SSL is closely related a supervised loss we refer to as
+            used in SSL is closely related to a supervised loss which we refer to as
             <span class="text-red-600 font-medium">Negatives-only Supervised Contrastive Loss (NSCL)</span>.
             Specifically, the gap between the two losses is at most $O(1/C)$ as shown below.
             </p>
@@ -364,7 +364,7 @@
         Not quite. CDNV is great if you assume near-perfect clustering— <em>*each class*</em>
         forming a tight, spherical blob. But that's a pretty strong assumption, especially 
         in SSL where no labels guide the geometry. So instead, we introduce a weaker notion
-        of clusterting: <strong>directional class-distance-normalized variance (dir-CDNV)</strong>.
+        of clustering: <strong>directional class-distance-normalized variance (dir-CDNV)</strong>.
       </p>
 
       <p class="text-lg mb-4 mt-10">
@@ -384,7 +384,8 @@
           <h6 class="text-xl font-semibold mb-2">Projected variance:</h6>
           <p class="text-slate-700">
             Projected variance (or directional variance) measures variance only along the direction between class centers.
-            Instead of using full isotropic distance from a point to its class center, we project each point onto the unit vector connecting class centers.
+            Instead of using full isotropic distance from a point to its class center, we project each point onto the unit 
+            direction <span class="text-blue-700 font-medium">(shown in blue)</span> connecting class centers.
             
           </p>
 
