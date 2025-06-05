@@ -287,8 +287,13 @@
       </p>
 
       <p class="text-lg mb-4 mt-10">
-        For this purpose, we need to understand a variance term that helps us analyze the geometry of learned representations:
-        <strong> Class-Distance-Normalized Variance (CDNV)</strong>. For a model $f$, and two class-conditional distributions $D_i$ and $D_j$, the CDNV is defined as:
+        Suppose we have a downstream task with two classes (for eg: cats and dogs) with distributions $D_1$ and $D_2$,
+        and a pre-trained model $f$, we measure the downstream performance $err_{m,D}(f)$ as the test performance 
+        of a linear probe trained on top of $f$ using $m$ random samples per class. 
+        <a href="https://arxiv.org/pdf/2112.15121" target="_blank" class="text-blue-600 underline">One approach</a> 
+        for estimating this bound is to use the <strong>class-distance-normalized variance (CDNV)</strong>.
+        <br><br>
+        For a model $f$, and two class-conditional distributions $D_i$ and $D_j$, the CDNV is defined as:
         $$V_{f}(D_i, D_j) = \frac{\text{Intra-class variance}}{\left(\text{Inter-class distance}\right)^2}$$
       </p>
 
@@ -325,7 +330,7 @@
       <p class="text-lg mb-4 mt-10">
         A low CDNV value is associated with better downstream performance.
         <a href="https://arxiv.org/pdf/2112.15121" target="_blank" class="text-blue-600 underline">For instance,</a>
-        the few-shot classification error of a model $f$, $\mathrm{err}_{m,D}(f)$, trained on a data 
+        the few-shot classification error, $\mathrm{err}_{m,D}(f)$, trained on a data 
         distribution $D$ with $m$ labeled samples per class can be bounded as:
       </p>
 
@@ -356,14 +361,15 @@
         <strong>
           is CDNV good enough to exlain transferability in SSL?
         </strong>
-        
+        Not quite. CDNV is great if you assume near-perfect clustering— <em>*each class*</em>
+        forming a tight, spherical blob. But that's a pretty strong assumption, especially 
+        in SSL where no labels guide the geometry. So instead, we introduce a weaker notion
+        of clusterting: <strong>directional class-distance-normalized variance (dir-CDNV)</strong>.
       </p>
 
       <p class="text-lg mb-4 mt-10">
-        <strong>Directional CDNV</strong> refines CDNV by measuring variance only along
-        the direction between class centers. Instead of using full isotropic distance from 
-        a point to its class center, we project each point onto the unit vector connecting 
-        class centers. This captures how spread out the points are in the discriminative direction. 
+        For a model $f$, and two class-conditional distributions $D_i$ and $D_j$, the dir-CDNV is defined as:
+        $$\tilde{V}_f(D_i,D_j) = \frac{\text{Projected variance}}{\left(\text{Inter-class distance}\right)^2}$$
       </p>
 
       <!-- Directional CDNV  Visualization -->
@@ -377,33 +383,60 @@
         <div class="md:w-1/2 w-full text-left space-y-4">
           <h6 class="text-xl font-semibold mb-2">Projected variance:</h6>
           <p class="text-slate-700">
-            Intra-class variance quantifies how tightly the samples are packed around their class-center. 
-            Smaller intra-class variance implies more compact representations of a given class.
+            Projected variance (or directional variance) measures variance only along the direction between class centers.
+            Instead of using full isotropic distance from a point to its class center, we project each point onto the unit vector connecting class centers.
+            
           </p>
 
           <div class="mt-6 pt-4 border-t border-gray-300">
             <h6 class="text-xl font-semibold mb-2">What dir-CDNV captures:</h6>
             <p class="text-slate-700">
-              CDNV balances these two forces—compactness vs. separation—and is minimized when clusters are tight
-              and well-separated.
+              dir-CDNV captures how spread out the points are in the discriminative direction.
             </p>
           </div>
         </div>
       </div>
+
+      <p class="text-lg mb-4 mt-10">
+        We analyze both variance terms for both CL and NSCL models on CIFAR-100, and mini‑ImageNet.
+        During training, we observe that CDNV decreases significantly for NSCL but it remains relatively high for CL.
+        However, dir-CDNV decreases for both CL and NSCL models, indicating that both models learn to 
+        reduce the spread of points in the discriminative direction.
+      </p>
+
+      <!-- Image grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+        <div class="flex flex-col items-center">
+          <img src="./images/cdnv/cifar100_cdnv.png" alt="CIFAR-100" class="w-full object-contain rounded shadow transition hover:scale-105" />
+          <span class="mt-2 text-sm text-slate-500">(a) CIFAR100</span>
+        </div>
+        <div class="flex flex-col items-center">
+          <img src="./images/cdnv/imagenet_cdnv.png" alt="mini-ImageNet" class="w-full object-contain rounded shadow transition hover:scale-105" />
+          <span class="mt-2 text-sm text-slate-500">(b) mini-ImageNet</span>
+        </div>
+      </div>
+      <p class="text-sm text-slate-500 text-center max-w-4xl mx-auto italic mt-4">
+        Figure 5: Analysis of CDNV and dir-CDNV during training.
+      </p>
+      <p class="text-lg mb-4 mt-10">
+        So why go through all this trouble defining directional CDNV?
+        Because it turns out—this is the term that actually controls how well we can recover labels from representations,
+        as we show in the next section.
+      </p>
 
       <!-- Claim 4 -->
       <div class="mt-20 mb-10 p-6 border rounded-md shadow-sm bg-white fade-in-up">
           <h3 class="text-xl font-semibold mb-4">3 · Recoverability of Labels</h3>
           <p class="mb-4">
           Our key insight is that  <em>few-shot classification error</em> is governed by two geometric variance terms, with the
-          <strong>directional class-distance-normalized variance (d‑CDNV)</strong> playing the dominant role.
+          <strong>dir‑CDNV</strong> playing the dominant role.
           </p>
 
           Formally,
           <p class="text-base mb-2">$$
             \mathrm{err}_{m,D}(f)
             \lesssim
-            (C'-1)\left[\text{Avg}_{i\neq j}[\tilde{V}_f(D_i,D_j)] + \tfrac{1}{m}\,\text{Avg}_{i\neq j}[V_{f}(D_i,D_j)] \right]
+            \left[\text{Avg}_{i\neq j}[\tilde{V}_f(D_i,D_j)] + \tfrac{1}{m}\,\text{Avg}_{i\neq j}[V_{f}(D_i,D_j)] \right]
         $$</p>
         <p class="text-sm italic text-right text-slate-500 mb-4">Proposition (1)</p>
 
@@ -446,9 +479,6 @@
               </div>
             </div>
           </div>
-          
-          
-
 
           <div class="space-y-1">
                 <p>Other terms:</p>
@@ -462,28 +492,7 @@
         </div>
         </div>
       </div>
-      <p class="text-lg mb-4">
-        We analyze Thm. (2) by inspecting the geometry of learned representations via two variance terms: 
-        <strong>class-distance-normalized variance (CDNV)</strong> and <strong>directional class-distance-normalized variance (d‑CDNV)</strong>.
-        During training, both CDNV and d-CDNV decrease significantly (as shown below) for NSCL implying that the learned 
-        representations become more clustered, and hence, also separable.
-      </p>
-
-      <!-- Image grid -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
-        <div class="flex flex-col items-center">
-          <img src="./images/cdnv/cifar10_cdnv.png" alt="CIFAR-10" class="w-full object-contain rounded shadow transition hover:scale-105" />
-          <span class="mt-2 text-sm text-slate-500">(a) CIFAR10</span>
-        </div>
-        <div class="flex flex-col items-center">
-          <img src="./images/cdnv/cifar100_cdnv.png" alt="CIFAR-100" class="w-full object-contain rounded shadow transition hover:scale-105" />
-          <span class="mt-2 text-sm text-slate-500">(b) CIFAR100</span>
-        </div>
-        <div class="flex flex-col items-center">
-          <img src="./images/cdnv/imagenet_cdnv.png" alt="mini-ImageNet" class="w-full object-contain rounded shadow transition hover:scale-105" />
-          <span class="mt-2 text-sm text-slate-500">(c) mini-ImageNet</span>
-        </div>
-      </div>
+      
     <p class="text-lg mb-4">
       We validate Proposition (1) by tracking the few-shot performance of linear probes and NCCC on CIFAR-10, CIFAR-100, and mini‑ImageNet.
       The error bound goes down to 0.25 for CIFAR-10 at a very large m, shown in red below.
