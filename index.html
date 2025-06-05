@@ -273,7 +273,7 @@
       
       <!-- Motivation for CDNV and dir-CDNV -->
       <p class="text-lg mb-4 mt-10">
-        NSCL performs well! 
+        In short, NSCL-training performs well! 
         <br><br>
         Theorem 2 implies that <span class="text-red-600 font-medium">NSCL</span> yields perfectly clustered representations, 
         which in turn allow us to easily infer the labels from the learned model. 
@@ -293,8 +293,8 @@
         <a href="https://arxiv.org/pdf/2112.15121" target="_blank" class="text-blue-600 underline">One approach</a> 
         for estimating this bound is to use the <strong>class-distance-normalized variance (CDNV)</strong>.
         <br><br>
-        For a model $f$, and two class-conditional distributions $D_i$ and $D_j$, the CDNV is defined as:
-        $$V_{f}(D_i, D_j) = \frac{\text{Intra-class variance}}{\left(\text{Inter-class distance}\right)^2}$$
+        For a model $f$, and two class-conditional distributions $D_1$ and $D_2$, the CDNV is defined as:
+        $$V_{f}(D_1, D_2) = \frac{\text{Intra-class variance}}{\left(\text{Inter-class distance}\right)^2}$$
       </p>
 
       <!-- CDNV  Visualization -->
@@ -331,7 +331,7 @@
         A low CDNV value is associated with better downstream performance.
         <a href="https://arxiv.org/pdf/2112.15121" target="_blank" class="text-blue-600 underline">For instance,</a>
         the few-shot classification error, $\mathrm{err}_{m,D}(f)$, trained on a data 
-        distribution $D$ with $m$ labeled samples per class can be bounded as:
+        distribution $D$ with $m$ labeled samples per class can be bounded as follows:
       </p>
 
       <div class="relative mb-4">
@@ -339,7 +339,7 @@
           $$
           \mathrm{err}_{m,D}(f)
           \lesssim
-          \text{Avg}_{i\neq j}[V_{f}(D_i,D_j)] \, (1 + \tfrac{1}{m})
+          (1 + \tfrac{1}{m}) \, V_{f}(D_1,D_2)] 
           $$
         </p>
         <span class="absolute right-0 top-1/2 -translate-y-1/2 text-sm italic text-slate-500">
@@ -437,7 +437,7 @@
           <p class="text-base mb-2">$$
             \mathrm{err}_{m,D}(f)
             \lesssim
-            \left[\text{Avg}_{i\neq j}[\tilde{V}_f(D_i,D_j)] + \tfrac{1}{m}\,\text{Avg}_{i\neq j}[V_{f}(D_i,D_j)] \right]
+            \textcolor{purple}{\tilde{V}_f(D_1,D_2)} + \tfrac{1}{m}\,\textcolor{orange}{V_{f}(D_1,D_2)}
         $$</p>
         <p class="text-sm italic text-right text-slate-500 mb-4">Proposition (1)</p>
 
@@ -454,26 +454,26 @@
           <div class="text-sm text-slate-600">
             <div class="flex flex-col md:flex-row gap-4">
               <!-- CDNV -->
-              <div class="bg-slate-50 border rounded p-4 overflow-x-auto flex-1">
+              <div class="border-2 border-orange-300 bg-slate-50 rounded p-4 text-sm flex-1 hover:border-orange-600">
                 <p class="whitespace-nowrap">
-                  $$V_f(D_i, D_j) = \frac{\sigma_i^2}{\|\mu_i - \mu_j\|^2}$$
+                  $$V_f(D_1, D_2) = \frac{\sigma_1^2}{\|\mu_1 - \mu_2\|^2}$$
                 </p>
                 <p class="whitespace-nowrap">
-                  $$\sigma_{i}^{2} = \operatorname{Var}_{x \sim D_i} [ f(x) ]$$
+                  $$\sigma_{1}^{2} = \operatorname{Var}_{x \sim D_1} [ f(x) ]$$
                 </p>
               </div>
           
               <!-- Directional CDNV -->
-              <div class="bg-slate-50 border rounded p-4 overflow-x-auto flex-1 space-y-2">
+              <div class="border-2 border-purple-600 bg-slate-50 rounded p-4 text-sm flex-1 hover:border-purple-300">
                 <p class="whitespace-nowrap">
-                  $$\tilde{V}_f(D_i, D_j) = \frac{\sigma_{ij}^2}{\|\mu_i - \mu_j\|^2}$$
+                  $$\tilde{V}_f(D_1, D_2) = \frac{\sigma_{12}^2}{\|\mu_1 - \mu_2\|^2}$$
                 </p>
                 <div class="flex flex-col md:flex-row items-center gap-6 mt-6">
                   <p class="whitespace-nowrap">
-                    $$\sigma_{ij}^{2} = \operatorname{Var}_{x \sim D_i} [ \langle f(x) - \mu_i, u_{ij} \rangle ]$$
+                    $$\sigma_{12}^{2} = \operatorname{Var}_{x \sim D_1} [ \langle f(x) - \mu_1, u_{12} \rangle ]$$
                   </p>
                   <p class="whitespace-nowrap">
-                    $$u_{ij} = \frac{\mu_i - \mu_j}{\|\mu_i - \mu_j\|^2}$$
+                    $$u_{12} = \frac{\mu_1 - \mu_2}{\|\mu_1 - \mu_2\|^2}$$
                   </p>
                 </div>
                 
@@ -485,9 +485,7 @@
                 <p>Other terms:</p>
                 <ul class="list-disc list-inside">
                 <li>$D_i$: Class-conditional distribution for class $i$</li>
-                <li>$c_1$, $c_2$: Constants derived in Appendix C</li>
                 <li>$m$: Number of labeled samples per class (i.e., number of shots)</li>
-                <li>$C'$: Total number of classes</li>
                 </ul>
           </div>
         </div>
