@@ -277,16 +277,17 @@
         <br><br>
         Theorem 2 implies that <span class="text-red-600 font-medium">NSCL</span> yields perfectly clustered representations, 
         which in turn allow us to easily infer the labels from the learned model. 
-        However, our goal is to better understand <span class="text-blue-600 font-medium">self-supervised CL</span>, not its supervised counterpart. 
+        <!-- However, our goal is to better understand <span class="text-blue-600 font-medium">self-supervised CL</span>, not its supervised counterpart.  -->
         This raises the following question: 
         <div class="fade-in-up mx-auto my-8 w-full max-w-3xl rounded-md border border-black bg-indigo-50 px-6 py-4 text-center text-lg italic text-slate-800 shadow-sm">
           <strong>
-            Can we identify a weaker form of clustering that is satisfied by CL-trained models and explains their success in downstream classification tasks?
+            Can we come up with an error bound based on the geometric properties of representations that explains transferability?
           </strong>
         </div>
       </p>
 
       <p class="text-lg mb-4 mt-10">
+        Estimating the downstream error of NSCL-trained models is fairly simply.
         Suppose we have a downstream task with two classes (for eg: cats and dogs) with distributions $D_1$ and $D_2$,
         and a pre-trained model $f$, we measure the downstream performance $err_{m,D}(f)$ as the test performance 
         of a linear probe trained on top of $f$ using $m$ random samples per class. 
@@ -339,7 +340,7 @@
           $$
           \mathrm{err}_{m,D}(f)
           \lesssim
-          (1 + \tfrac{1}{m}) \, V_{f}(D_1,D_2)] 
+          (1 + \tfrac{1}{m}) \, V_{f}(D_1,D_2) 
           $$
         </p>
         <span class="absolute right-0 top-1/2 -translate-y-1/2 text-sm italic text-slate-500">
