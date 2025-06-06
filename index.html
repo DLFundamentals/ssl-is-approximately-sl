@@ -56,7 +56,7 @@
           <i class="fab fa-github text-5xl text-slate-800"></i>
           <span class="mt-2 text-md text-slate-600">Code</span>
         </a>
-        <a href="https://arxiv.org/abs/2405.xxxxx" class="flex flex-col items-center hover:scale-105 transition-transform" target="_blank">
+        <a href="https://arxiv.org/abs/2506.04411" class="flex flex-col items-center hover:scale-105 transition-transform" target="_blank">
           <i class="fas fa-file-pdf text-5xl text-indigo-500"></i>
           <span class="mt-2 text-md text-slate-600">Paper</span>
         </a>
@@ -289,7 +289,7 @@
       <p class="text-lg mb-4 mt-10">
         Estimating the downstream error of NSCL-trained models is fairly simply.
         Suppose we have a downstream task with two classes (for eg: cats and dogs) with distributions $D_1$ and $D_2$,
-        and a pre-trained model $f$, we measure the downstream performance $err_{m,D}(f)$ as the test performance 
+        and a pre-trained model $f$, we measure the downstream performance $\mathrm{err}_{m,D}(f)$ as the test performance 
         of a linear probe trained on top of $f$ using $m$ random samples per class. 
         <a href="https://arxiv.org/pdf/2112.15121" target="_blank" class="text-blue-600 underline">One approach</a> 
         for estimating this bound is to use the <strong>class-distance-normalized variance (CDNV)</strong>.
@@ -369,8 +369,8 @@
       </p>
 
       <p class="text-lg mb-4 mt-10">
-        For a model $f$, and two class-conditional distributions $D_i$ and $D_j$, the dir-CDNV is defined as:
-        $$\tilde{V}_f(D_i,D_j) = \frac{\text{Projected variance}}{\left(\text{Inter-class distance}\right)^2}$$
+        For a model $f$, and two class-conditional distributions $D_1$ and $D_2$, the dir-CDNV is defined as:
+        $$\tilde{V}_f(D_1,D_2) = \frac{\text{Projected variance}}{\left(\text{Inter-class distance}\right)^2}$$
       </p>
 
       <!-- Directional CDNV  Visualization -->
@@ -588,7 +588,7 @@
         <p class="mb-4 text-lg font-medium text-slate-800">Interested in the details?</p>
 
         <div class="flex flex-col md:flex-row gap-4">
-            <a href="https://arxiv.org/abs/2405.xxxxx" target="_blank"
+            <a href="https://arxiv.org/abs/2506.04411" target="_blank"
             class="px-6 py-3 text-white bg-indigo-600 hover:bg-indigo-700 rounded text-center font-medium transition">
             Read the Paper (arxiv)
             </a>
@@ -606,11 +606,11 @@
         <div class="relative">
             <!-- BibTeX block -->
 <pre id="bibtex-entry" class="bg-slate-900 text-green-200 p-4 rounded overflow-x-auto text-sm leading-relaxed font-mono">
-@inproceedings{clnscl2025,
-title  = {Self-Supervised Contrastive Learning is Approximately Supervised Contrastive Learning},
-author = {Luthra, Achleshwar and Yang, Tianbao and Galanti, Tomer},
-year   = {2025},
-url    = {https://arxiv.org/abs/2405.xxxxx}
+@misc{luthra2025selfsupervisedcontrastivelearningapproximately,
+title={Self-Supervised Contrastive Learning is Approximately Supervised Contrastive Learning}, 
+author={Achleshwar Luthra and Tianbao Yang and Tomer Galanti},
+year={2025},
+url={https://arxiv.org/abs/2506.04411}, 
 }
 </pre>
 
